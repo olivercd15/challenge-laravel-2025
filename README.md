@@ -52,7 +52,7 @@ Muestra datos completos incluyendo items, totales y estado actual.
 - Contenerización con Docker + Docker Compose
 
 ## 📦 Estructura sugerida
-app/
+```app/
 ├── Http/
 │   ├── Controllers/
 │   ├── Requests/
@@ -61,6 +61,7 @@ app/
 ├── Repositories/
 routes/
 ├── api.php
+```
 
 ## 🧪 Extra Points
 - Documentación en Swagger o Postman
