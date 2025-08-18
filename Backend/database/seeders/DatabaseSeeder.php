@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Order::factory()
-            ->count(10)
-            ->has(OrderItem::factory()->count(rand(1, 5)), 'items')
+            ->count(3)
+            ->has(OrderItem::factory()->count(rand(1, 3)), 'items')
             ->create();
     }
 }
