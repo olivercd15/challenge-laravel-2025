@@ -106,7 +106,7 @@ Sobre las consideraciones tecnicas y el stack de desarrollo se tiene lo siguient
   - Listar Ordenes
   - Obtener Orden
 - Arquitectura:
-  - Hexagonal
+  - Clean Arch
   - DDD
   - CQRS
   - API Rest
@@ -157,7 +157,7 @@ tests/
 ├── Feature/
 ```
 
-Explicación: Se eligió la arquitectura Hexagonal + DDD por la alta escalabilidad que proporciona trabajar con este diseño (Application, Domain, Infrastructure), ademas que incluye directamente algunos Principios SOLID como Segregacion de Interfaces o Inyeccion de Dependencias, con lo cual apostamos fuertemente por el desacoplamiento de código, direccionando a un codigo legible, estructurado y altamente escalable.
+Explicación: Se eligió a Clean Architecture + DDD por la alta escalabilidad que proporciona trabajar con este diseño (Application, Domain, Infrastructure), ademas que incluye directamente algunos Principios SOLID como Segregacion de Interfaces o Inyeccion de Dependencias, con lo cual apostamos fuertemente por el desacoplamiento de código, direccionando a un codigo legible, estructurado y altamente escalable.
 Adicionalmente también se eligió aplicar el patrón CQRS (Command Query Responsibility Segregation) en la capa de Application para poder separar las acciones de lectura y escritura en la base de datos de los distintos metodos, esto contribuye de gran manera al desacoplamiento y nos permite escalar nuestro proyecto de manera exponencial, asi tambien como el rendimiento del mismo bajo consultas mejor trabajadas. 
 
 ## 🧪 Extra Points
@@ -171,7 +171,7 @@ Adicionalmente también se eligió aplicar el patrón CQRS (Command Query Respon
   - Justamente el patron CQRS aplicado en el proyecto nos permite escalar de esta manera, ya que podemos explotar al maximo la optimizacion de consultas pesadas, vistas o procedimientos almacenados, en nuestras llamadas "Queries" podemos dejar de aplicar Eloquent para acceder con DB o Query Builder si fuera necesario. La integracion con Redis tambien nos permite ser veloces ante consultas repetitivas, tambien se puede aplicar colas de trabajo (Queues) para gestion de respuestas. Por último, con el mismo Docker podemos realizar algunas replicas de la aplicacion y distribuir la carga (Load Balancer).
 
 - ¿Qué estrategia seguirías para desacoplar la lógica del dominio de Laravel/Eloquent?
-  - Justamente la arquitectura elegida (Hexagonal) nos permite seguir esta estrategia, bajo una logica de codigo limpio y desacoplado. En nuestra Infrastructure donde alojamos nuestros servicios de JWT, Redis y Eloquent haremos lectura y escritura mediante nuestro Patron Repositorio, sin involucrar la logica que se mantiene en la Application y en los Handlers (CQRS). Estos repositorios de los Eloquent Models son inyectados a traves de interfaces definidas en el dominio
+  - Justamente la arquitectura elegida (Clean Arch) nos permite seguir esta estrategia, bajo una logica de codigo limpio y desacoplado. En nuestra Infrastructure donde alojamos nuestros servicios de JWT, Redis y Eloquent haremos lectura y escritura mediante nuestro Patron Repositorio, sin involucrar la logica que se mantiene en la Application y en los Handlers (CQRS). Estos repositorios de los Eloquent Models son inyectados a traves de interfaces definidas en el dominio
 
 - ¿Cómo manejarías versiones de la API en producción?
   - Realizando un versionamiento "/api/v1", como se hizo en los Auth Endpoints, manteniendo la cultura de documentacion con Swagger o Postman, y por ultimo algo que considero una opinion tecnica mas personal, siempre prefiero mantener los endpoint legacy, claro que para esto deben estar en una estructura bastante desacoplada, pero al mantener los endpoints anteriores se evita romper funcionalidad en producción, asi que cada actualizacion de version de cada API la manejaria como una funcionalidad independiente y preferiblemente que se encuentre fuertemente desacoplada.
