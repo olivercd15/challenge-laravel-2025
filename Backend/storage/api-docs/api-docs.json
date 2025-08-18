@@ -11,7 +11,6 @@
                     "Auth"
                 ],
                 "summary": "Login",
-                "description": "Autentica al usuario y devuelve un token JWT",
                 "operationId": "666b8b4f0d29d28ae597d6a890e6bb70",
                 "requestBody": {
                     "required": true,
@@ -39,7 +38,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login exitoso",
+                        "description": "Login successful!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -63,32 +62,36 @@
                         }
                     },
                     "401": {
-                        "description": "Credenciales incorrectas"
+                        "description": "Email or password incorrect."
                     },
                     "422": {
-                        "description": "Error de validación"
+                        "description": "Validation error"
                     }
                 }
             }
         },
-        "/api/v2/auth/login": {
+        "/api/v1/auth/register": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Login",
-                "description": "Autentica al usuario y devuelve un token JWT",
-                "operationId": "60dee841292078e4052733b840969329",
+                "summary": "Register",
+                "operationId": "a806f4fd89cc9c3e359aa8f8b57bc2cb",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "name",
                                     "email",
                                     "password"
                                 ],
                                 "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Click"
+                                    },
                                     "email": {
                                         "type": "string",
                                         "example": "user@example.com"
@@ -105,26 +108,19 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login exitoso",
+                        "description": "Register successful!",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "token": {
-                                            "type": "string",
-                                            "example": "eyJhbGciOi..."
+                                        "name": {
+                                            "type": "string"
                                         },
-                                        "tokenType": {
-                                            "type": "string",
-                                            "example": "bearer"
+                                        "email": {
+                                            "type": "string"
                                         },
-                                        "expiresIn": {
-                                            "type": "integer",
-                                            "example": 3600
-                                        },
-                                        "role": {
-                                            "type": "string",
-                                            "example": "admin"
+                                        "status": {
+                                            "type": "integer"
                                         }
                                     },
                                     "type": "object"
@@ -133,12 +129,294 @@
                         }
                     },
                     "401": {
-                        "description": "Credenciales incorrectas"
+                        "description": "Data error"
                     },
                     "422": {
-                        "description": "Error de validación"
+                        "description": "Validation error"
                     }
                 }
+            }
+        },
+        "/api/orders/{id}/advance": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Advance orders",
+                "operationId": "47f2b18942d089bf06de8170f9cda5e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "status": {
+                                                "type": "string"
+                                            },
+                                            "message": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Data error"
+                    },
+                    "422": {
+                        "description": "Validation error "
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "List orders",
+                "operationId": "bbe0639fa82f4f1d4cff545134a99284",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 20
+                                            },
+                                            "client_name": {
+                                                "type": "string",
+                                                "example": "Carlos Gómez"
+                                            },
+                                            "total": {
+                                                "type": "string",
+                                                "example": "80.00"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "initiated"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-08-18T10:20:09.000000Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-08-18T10:20:09.000000Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Data error"
+                    },
+                    "422": {
+                        "description": "Validation error "
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create orders",
+                "operationId": "d86c0e969572a1b4825b5d5ec7b4cf6c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "client_name": {
+                                        "type": "string",
+                                        "example": "Jose Mendoza"
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Ceviche"
+                                                },
+                                                "quantity": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "unit_price": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 60
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Create order successful!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "orderId": {
+                                            "type": "integer"
+                                        },
+                                        "clientName": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "initiated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Data error"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get detail order",
+                "operationId": "f9e183ba96f1d52247b77c4860bbb688",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "client_name": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "total": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "quantity": {
+                                                        "type": "integer"
+                                                    },
+                                                    "unit_price": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Data error"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -146,6 +424,7 @@
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
+                "bearerFormat": "JWT",
                 "scheme": "bearer"
             }
         }
@@ -154,6 +433,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
         }
     ]
 }

@@ -9,7 +9,7 @@ class GetOrderHandler
 
     public function handle(GetOrderQuery $query): array
     {
-        $order = $this->orderRepository->getOrder($query->orderId);
+        $order = $this->orderRepository->getOrderDetails($query->orderId);
 
         return $order;
     }

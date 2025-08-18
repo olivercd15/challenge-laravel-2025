@@ -4,29 +4,30 @@ namespace App\Http\Swagger\Auth;
 
 /**
  * @OA\Post(
- *     path="/api/v1/auth/login",
+ *     path="/api/v1/auth/register",
  *     tags={"Auth"},
- *     summary="Login",
+ *     summary="Register",
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"email","password"},
+ *             required={"name","email","password"},
+ *             @OA\Property(property="name", type="string", example="John Click"),
  *             @OA\Property(property="email", type="string", example="user@example.com"),
  *             @OA\Property(property="password", type="string", example="123456")
  *         )
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Login successful!",
+ *         description="Register successful!",
  *         @OA\JsonContent(
- *             @OA\Property(property="token", type="string", example="eyJhbGciOi..."),
- *             @OA\Property(property="tokenType", type="string", example="bearer"),
- *             @OA\Property(property="expiresIn", type="integer", example=3600)
+ *             @OA\Property(property="name", type="string"),
+ *             @OA\Property(property="email", type="string"),
+ *             @OA\Property(property="status", type="integer")
  *         )
  *     ),
  *     @OA\Response(
  *         response=401,
- *         description="Email or password incorrect."
+ *         description="Data error"
  *     ),
  *     @OA\Response(
  *         response=422,
@@ -34,4 +35,4 @@ namespace App\Http\Swagger\Auth;
  *     )
  * )
  */
-class LoginAnnotations {}
+class RegisterAnnotations {}
