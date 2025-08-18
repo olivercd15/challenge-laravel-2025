@@ -7,6 +7,7 @@ Ejecutar los siguientes comandos para levantar el proyecto con Docker:
 - Clonar el proyecto
 ```bash
 git clone https://github.com/olivercd15/challenge-laravel-2025.git
+```
 
 - Ir a carpeta backend
 ```bash
