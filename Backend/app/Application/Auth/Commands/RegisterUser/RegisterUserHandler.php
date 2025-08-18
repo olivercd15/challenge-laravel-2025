@@ -3,7 +3,7 @@
 namespace App\Application\Auth\Commands\RegisterUser;
 
 use App\Application\Auth\DTOs\RegisterResultDTO;
-use App\Domain\Repositories\UserRepositoryInterface;
+use App\Domain\Interfaces\UserRepositoryInterface;
 use Illuminate\Validation\ValidationException;
 
 class RegisterUserHandler

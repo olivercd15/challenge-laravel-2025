@@ -2,16 +2,30 @@
 
 namespace App\Infrastructure\Repositories;
 
-use App\Domain\Repositories\OrderRepositoryInterface;
+use App\Domain\Interfaces\OrderRepositoryInterface;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderStatusLog;
+use Illuminate\Redis\RedisManager;
+
 
 class EloquentOrderRepository implements OrderRepositoryInterface
 {
+    public function __construct(private RedisManager $redis) {}
     public function listOrders(): array
     {
-        return Order::where('status', '!=', 'delivered')->get()->toArray();
+        $cacheKey = 'orders:active';
+        $cached = $this->redis->get($cacheKey);
+
+        if ($cached) {
+            return json_decode($cached, true);
+        }
+
+        $orders = Order::where('status', '!=', 'delivered')->get()->toArray();
+
+        $this->redis->setex($cacheKey, 30, json_encode($orders)); // TTL: 30
+
+        return $orders;
     }
     public function getOrder(int $orderId)
     {
@@ -20,14 +34,15 @@ class EloquentOrderRepository implements OrderRepositoryInterface
 
     public function createOrder(array $data)
     {
-        $total = collect($data['items'])->sum(function ($item) {
-            return $item['quantity'] * $item['unit_price'];
-        });
-
+        $total = collect($data['items'])->sum(fn($item) => $item['quantity'] * $item['unit_price']);
         $data['status'] = 'initiated';
         $data['total'] = $total;
+        $order = Order::create($data);
 
-        return Order::create($data);
+        $this->redis->del('orders:active');
+        $this->redis->setex("order:{$order->id}", 30, json_encode($this->getOrderDetails($order->id)));
+
+        return $order;
     }
 
     public function createOrderItem(int $orderId, array $item)
@@ -47,11 +62,13 @@ class EloquentOrderRepository implements OrderRepositoryInterface
     public function advanceOrder(int $orderId, string $newStatus)
     {
         $order = Order::where('id', $orderId)->get()->first();
-
-        if (!$order) { return []; }
+        if (!$order) return [];
 
         $order->status = $newStatus;
         $order->save();
+
+        $this->redis->del('orders:active');
+        $this->redis->del("order:{$orderId}");
 
         return [
             'id' => $order->id,
@@ -64,7 +81,9 @@ class EloquentOrderRepository implements OrderRepositoryInterface
     {
         $order = Order::where('id', $orderId)->get()->first();
 
-        if (!$order) { return []; }
+        if (!$order) {
+            return [];
+        }
 
         $order->delete();
 
@@ -90,6 +109,12 @@ class EloquentOrderRepository implements OrderRepositoryInterface
 
     public function getOrderDetails(int $orderId)
     {
+        $cacheKey = "order:{$orderId}";
+        $cached = $this->redis->get($cacheKey);
+        if ($cached) {
+            return json_decode($cached, true);
+        }
+
         $order = Order::where('id', $orderId)
             ->with('items')
             ->first();
@@ -98,7 +123,7 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             return [];
         }
 
-        return [
+        $result = [
             'id' => $order->id,
             'client_name' => $order->client_name,
             'status' => $order->status,
@@ -114,5 +139,9 @@ class EloquentOrderRepository implements OrderRepositoryInterface
                 ];
             })->toArray(),
         ];
+
+        $this->redis->setex($cacheKey, 30, json_encode($result));
+
+        return $result;
     }
 }

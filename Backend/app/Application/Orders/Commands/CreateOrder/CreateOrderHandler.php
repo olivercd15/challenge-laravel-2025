@@ -3,7 +3,7 @@
 namespace App\Application\Orders\Commands\CreateOrder;
 
 use App\Application\Orders\DTOs\CreateOrderResultDTO;
-use App\Domain\Repositories\OrderRepositoryInterface;
+use App\Domain\Interfaces\OrderRepositoryInterface;
 
 class CreateOrderHandler
 {

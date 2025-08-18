@@ -2,7 +2,7 @@
 
 namespace App\Application\Orders\Queries\ListOrders;
 
-use App\Domain\Repositories\OrderRepositoryInterface;
+use App\Domain\Interfaces\OrderRepositoryInterface;
 
 class ListOrdersHandler
 {

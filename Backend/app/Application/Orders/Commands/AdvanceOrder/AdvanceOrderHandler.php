@@ -1,7 +1,7 @@
 <?php
 namespace App\Application\Orders\Commands\AdvanceOrder;
 
-use App\Domain\Repositories\OrderRepositoryInterface;
+use App\Domain\Interfaces\OrderRepositoryInterface;
 
 class AdvanceOrderHandler
 {

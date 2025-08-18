@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Repositories;
+namespace App\Domain\Interfaces;
 
 interface OrderRepositoryInterface
 {

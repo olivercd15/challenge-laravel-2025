@@ -1,7 +1,7 @@
 <?php
 namespace App\Application\Orders\Queries\GetOrder;
 
-use App\Domain\Repositories\OrderRepositoryInterface;
+use App\Domain\Interfaces\OrderRepositoryInterface;
 
 class GetOrderHandler
 {

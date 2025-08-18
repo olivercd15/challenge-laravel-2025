@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Domain\Repositories\OrderRepositoryInterface;
-use App\Domain\Repositories\UserRepositoryInterface;
+use App\Domain\Interfaces\OrderRepositoryInterface;
+use App\Domain\Interfaces\UserRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentOrderRepository;
 use App\Infrastructure\Repositories\EloquentUserRepository;
 use Illuminate\Support\ServiceProvider;

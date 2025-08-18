@@ -1,13 +1,25 @@
 FROM php:8.2-fpm
 
-# Install Dependencies
+# Extensions
 RUN apt-get update && apt-get install -y \
     libpq-dev \
-    libzip-dev \
+    zip \
     unzip \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    git \
+    curl \
+    && docker-php-ext-install pdo pdo_pgsql
+
+# Redis
+RUN pecl install redis && docker-php-ext-enable redis
 
 # Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
+WORKDIR /var/www
+COPY . .
+
+# Laravel Composer Install
+RUN composer install --optimize-autoloader
+
+# Storage and Bootstrap
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
